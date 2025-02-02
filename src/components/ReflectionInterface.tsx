@@ -33,7 +33,8 @@ export default function ReflectionInterface() {
     
     setIsLoading(true);
     setError('');
-    const newMessages = [...messages, { role: 'user', content }];
+    const newMessage: Message = { role: 'user', content };
+    const newMessages = [...messages, newMessage];
     setMessages(newMessages);
     setCurrentMessage('');
 
@@ -53,7 +54,8 @@ export default function ReflectionInterface() {
       }
 
       const assistantContent = data.content || 'No response received';
-      setMessages([...newMessages, { role: 'assistant', content: assistantContent }]);
+      const assistantMessage: Message = { role: 'assistant', content: assistantContent };
+      setMessages([...newMessages, assistantMessage]);
       
       // Handle insight confirmation flow
       if (stage === 3 && assistantContent.includes('create impact')) {
@@ -84,12 +86,12 @@ export default function ReflectionInterface() {
     }
   };
 
-  const renderMessage = (content: string | { text: string }) => {
+  const renderMessage = (content: string) => {
     if (typeof content === 'string') {
       return content;
     }
     if (content && typeof content === 'object') {
-      return content.text || JSON.stringify(content);
+      return 'text' in content ? content.text : JSON.stringify(content);
     }
     return 'Unable to display message';
   };
