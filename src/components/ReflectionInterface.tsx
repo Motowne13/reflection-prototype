@@ -4,8 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Send } from 'lucide-react';
 import InsightCapture from './InsightCapture';
 
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 export default function ReflectionInterface() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -23,7 +28,7 @@ export default function ReflectionInterface() {
 
   const initialPrompt = "Think about a time in college when you felt truly energized and in your element. It could be anything - a project, a conversation, helping someone... What comes to mind?";
 
-  const sendMessage = async (content) => {
+  const sendMessage = async (content: string) => {
     if (!content.trim()) return;
     
     setIsLoading(true);
@@ -52,18 +57,15 @@ export default function ReflectionInterface() {
       
       // Handle insight confirmation flow
       if (stage === 3 && assistantContent.includes('create impact')) {
-        console.log('Stage 3 - Setting pending insight:', assistantContent);
+        console.log('Setting pending insight:', assistantContent);
         setPendingInsight(assistantContent);
         setStage(4);
       } else if (stage === 4) {
-        console.log('Stage 4 - User response:', content.toLowerCase());
-        console.log('Stage 4 - Current pending insight:', pendingInsight);
+        console.log('Stage 4 response:', content.toLowerCase());
         if (content.toLowerCase().includes('yes')) {
-          console.log('Setting final insight and confirming');
+          console.log('Setting final insight:', pendingInsight);
           setFinalInsight(pendingInsight);
           setInsightConfirmed(true);
-          console.log('Final insight set to:', pendingInsight);
-          console.log('insightConfirmed set to: true');
         } else if (content.toLowerCase().includes('no')) {
           // Reset to stage 3 for a new attempt
           setStage(3);
@@ -82,7 +84,7 @@ export default function ReflectionInterface() {
     }
   };
 
-  const renderMessage = (content) => {
+  const renderMessage = (content: string | { text: string }) => {
     if (typeof content === 'string') {
       return content;
     }
@@ -162,6 +164,7 @@ export default function ReflectionInterface() {
               onClick={() => sendMessage(currentMessage)}
               disabled={!currentMessage.trim() || isLoading}
               className="bg-purple-600 hover:bg-purple-700 text-white self-end"
+              aria-label={isLoading ? 'Sending...' : 'Send message'}
             >
               {isLoading ? 'Sending...' : <Send className="w-4 h-4" />}
             </Button>
