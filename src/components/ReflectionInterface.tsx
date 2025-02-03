@@ -86,11 +86,8 @@ export default function ReflectionInterface() {
     }
   };
 
-  const renderMessage = (content: string) => {
-    if (typeof content === 'string') {
-      return content;
-    }
-    return 'Unable to display message';
+  const renderMessage = (content: string): string => {
+    return content;
   };
 
   return (
@@ -153,10 +150,10 @@ export default function ReflectionInterface() {
           <div className="flex space-x-2">
             <textarea
               value={currentMessage}
-              onChange={(e) => setCurrentMessage(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setCurrentMessage(e.target.value)}
               placeholder="Share your thoughts..."
               className="flex-1 p-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
-              rows="3"
+              rows={3}
               disabled={isLoading}
             />
             <Button
