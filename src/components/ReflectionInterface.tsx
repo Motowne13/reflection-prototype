@@ -90,9 +90,6 @@ export default function ReflectionInterface() {
     if (typeof content === 'string') {
       return content;
     }
-    if (content && typeof content === 'object') {
-      return 'text' in content ? content.text : JSON.stringify(content);
-    }
     return 'Unable to display message';
   };
 
